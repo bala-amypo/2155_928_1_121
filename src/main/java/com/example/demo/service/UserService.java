@@ -3,15 +3,18 @@ package com.example.demo.service;
 import com.example.demo.exception.ApiException;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
 
     private final UserRepository repo;
+    private final PasswordEncoder encoder;
 
-    public UserService(UserRepository repo) {
+    public UserService(UserRepository repo, PasswordEncoder encoder) {
         this.repo = repo;
+        this.encoder = encoder;
     }
 
     public User register(User user) {
@@ -23,6 +26,7 @@ public class UserService {
             user.setRole("STAFF");
         }
 
+        user.setPassword(encoder.encode(user.getPassword()));
         return repo.save(user);
     }
 

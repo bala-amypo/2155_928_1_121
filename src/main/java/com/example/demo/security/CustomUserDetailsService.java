@@ -1,31 +1,30 @@
-// package com.example.demo.security;
+package com.example.demo.security;
 
-// import com.example.demo.model.User;
-// import com.example.demo.repository.UserRepository;
-// import org.springframework.security.core.userdetails.*;
-// import org.springframework.stereotype.Service;
+import com.example.demo.model.User;
+import com.example.demo.repository.UserRepository;
+import org.springframework.security.core.userdetails.*;
+import org.springframework.stereotype.Service;
 
-// @Service
-// public class CustomUserDetailsService implements UserDetailsService {
+@Service
+public class CustomUserDetailsService implements UserDetailsService {
 
-//     private final UserRepository repo;
+    private final UserRepository repo;
 
-//     public CustomUserDetailsService(UserRepository repo) {
-//         this.repo = repo;
-//     }
+    public CustomUserDetailsService(UserRepository repo) {
+        this.repo = repo;
+    }
 
-//     @Override
-//     public UserDetails loadUserByUsername(String email)
-//             throws UsernameNotFoundException {
+    @Override
+    public UserDetails loadUserByUsername(String email)
+            throws UsernameNotFoundException {
 
-//         User user = repo.findByEmail(email)
-//                 .orElseThrow(() ->
-//                         new UsernameNotFoundException("User not found"));
+        User user = repo.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("not found"));
 
-//         return org.springframework.security.core.userdetails.User
-//                 .withUsername(user.getEmail())
-//                 .password(user.getPassword())
-//                 .roles(user.getRole())
-//                 .build();
-//     }
-// }
+        return org.springframework.security.core.userdetails.User
+                .withUsername(user.getEmail())
+                .password(user.getPassword())
+                .roles(user.getRole())
+                .build();
+    }
+}
