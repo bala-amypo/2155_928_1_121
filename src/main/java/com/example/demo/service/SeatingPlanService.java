@@ -1,75 +1,64 @@
-package com.example.demo.model;
+package com.example.demo.service;
 
-import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import com.example.demo.exception.ApiException;
+import com.example.demo.model.*;
+import com.example.demo.repository.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.stereotype.Service;
+import java.util.*;
 
-@Entity
-@Table(name = "seating_plans")
-public class SeatingPlan {
+@Service
+public class SeatingPlanService {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private final ExamSessionRepository sessionRepo;
+    private final SeatingPlanRepository planRepo;
+    private final ExamRoomRepository roomRepo;
 
-    @ManyToOne
-    @JoinColumn(name = "exam_session_id")
-    private ExamSession examSession;
+    public SeatingPlanService(ExamSessionRepository s,
+                              SeatingPlanRepository p,
+                              ExamRoomRepository r) {
+        this.sessionRepo = s;
+        this.planRepo = p;
+        this.roomRepo = r;
+    }
 
-    @ManyToOne
-    @JoinColumn(name = "room_id")
-    private ExamRoom room;
+    public SeatingPlan generatePlan(Long sessionId) {
+        ExamSession session = sessionRepo.findById(sessionId)
+                .orElseThrow(() -> new ApiException("session not found"));
 
-    @Column(columnDefinition = "TEXT")
-    private String arrangementJson;
+        int count = session.getStudents().size();
 
-    private LocalDateTime generatedAt;
+        ExamRoom room = roomRepo.findByCapacityGreaterThanEqual(count)
+                .stream()
+                .findFirst()
+                .orElseThrow(() -> new ApiException("no room"));
 
-    @PrePersist
-    void onCreate() {
-        if (generatedAt == null) {
-            generatedAt = LocalDateTime.now();
+        Map<String, String> map = new LinkedHashMap<>();
+        int seat = 1;
+        for (Student s : session.getStudents()) {
+            map.put("Seat-" + seat++, s.getRollNumber());
+        }
+
+        try {
+            String json = new ObjectMapper().writeValueAsString(map);
+
+            SeatingPlan plan = new SeatingPlan();
+            plan.setExamSession(session);
+            plan.setRoom(room);
+            plan.setArrangementJson(json);
+
+            return planRepo.save(plan);
+        } catch (Exception e) {
+            throw new ApiException("json");
         }
     }
 
-    // ✅ GETTERS
-    public Long getId() {
-        return id;
+    public SeatingPlan getPlan(Long id) {
+        return planRepo.findById(id)
+                .orElseThrow(() -> new ApiException("plan not found"));
     }
 
-    public ExamSession getExamSession() {
-        return examSession;
-    }
-
-    public ExamRoom getRoom() {
-        return room;
-    }
-
-    public String getArrangementJson() {
-        return arrangementJson;
-    }
-
-    public LocalDateTime getGeneratedAt() {
-        return generatedAt;
-    }
-
-    // ✅ SETTERS (THIS FIXES THE ERROR)
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setExamSession(ExamSession examSession) {
-        this.examSession = examSession;
-    }
-
-    public void setRoom(ExamRoom room) {
-        this.room = room;
-    }
-
-    public void setArrangementJson(String arrangementJson) {
-        this.arrangementJson = arrangementJson;
-    }
-
-    public void setGeneratedAt(LocalDateTime generatedAt) {
-        this.generatedAt = generatedAt;
+    public List<SeatingPlan> getPlansBySession(Long sessionId) {
+        return planRepo.findByExamSessionId(sessionId);
     }
 }
