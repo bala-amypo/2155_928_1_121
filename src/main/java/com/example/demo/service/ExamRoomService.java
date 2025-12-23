@@ -9,24 +9,20 @@ import java.util.List;
 @Service
 public class ExamRoomService {
 
-    private final ExamRoomRepository repo;
+    private final ExamRoomRepository examRoomRepository;
 
-    public ExamRoomService(ExamRoomRepository repo) {
-        this.repo = repo;
+    public ExamRoomService(ExamRoomRepository examRoomRepository) {
+        this.examRoomRepository = examRoomRepository;
     }
 
     public ExamRoom addRoom(ExamRoom room) {
-        if (room.getRows() <= 0 || room.getColumns() <= 0)
-            throw new ApiException("invalid");
-
-        if (repo.findByRoomNumber(room.getRoomNumber()).isPresent())
+        if (examRoomRepository.findByRoomNumber(room.getRoomNumber()).isPresent()) {
             throw new ApiException("exists");
-
-        room.ensureCapacityMatches();
-        return repo.save(room);
+        }
+        return examRoomRepository.save(room);
     }
 
     public List<ExamRoom> getAllRooms() {
-        return repo.findAll();
+        return examRoomRepository.findAll();
     }
 }

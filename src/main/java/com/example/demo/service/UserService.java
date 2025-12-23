@@ -9,29 +9,26 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService {
 
-    private final UserRepository repo;
-    private final PasswordEncoder encoder;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository repo, PasswordEncoder encoder) {
-        this.repo = repo;
-        this.encoder = encoder;
+    public UserService(UserRepository userRepository,
+                       PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public User register(User user) {
-        if (repo.findByEmail(user.getEmail()).isPresent()) {
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new ApiException("exists");
         }
-
-        if (user.getRole() == null) {
-            user.setRole("STAFF");
-        }
-
-        user.setPassword(encoder.encode(user.getPassword()));
-        return repo.save(user);
+        if (user.getRole() == null) user.setRole("STAFF");
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return userRepository.save(user);
     }
 
     public User findByEmail(String email) {
-        return repo.findByEmail(email)
+        return userRepository.findByEmail(email)
                 .orElseThrow(() -> new ApiException("not found"));
     }
 }

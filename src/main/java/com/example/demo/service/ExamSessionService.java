@@ -3,30 +3,34 @@ package com.example.demo.service;
 import com.example.demo.exception.ApiException;
 import com.example.demo.model.ExamSession;
 import com.example.demo.repository.ExamSessionRepository;
+import com.example.demo.repository.StudentRepository;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 
 @Service
 public class ExamSessionService {
 
-    private final ExamSessionRepository repo;
+    private final ExamSessionRepository examSessionRepository;
+    private final StudentRepository studentRepository;
 
-    public ExamSessionService(ExamSessionRepository repo) {
-        this.repo = repo;
+    public ExamSessionService(ExamSessionRepository examSessionRepository,
+                              StudentRepository studentRepository) {
+        this.examSessionRepository = examSessionRepository;
+        this.studentRepository = studentRepository;
     }
 
-    public ExamSession createSession(ExamSession s) {
-        if (s.getExamDate().isBefore(LocalDate.now()))
+    public ExamSession createSession(ExamSession session) {
+        if (session.getExamDate().isBefore(LocalDate.now())) {
             throw new ApiException("past");
-
-        if (s.getStudents() == null || s.getStudents().isEmpty())
+        }
+        if (session.getStudents() == null || session.getStudents().isEmpty()) {
             throw new ApiException("at least 1 student");
-
-        return repo.save(s);
+        }
+        return examSessionRepository.save(session);
     }
 
     public ExamSession getSession(Long id) {
-        return repo.findById(id)
+        return examSessionRepository.findById(id)
                 .orElseThrow(() -> new ApiException("session not found"));
     }
 }

@@ -3,29 +3,31 @@ package com.example.demo.controller;
 import com.example.demo.model.Student;
 import com.example.demo.service.StudentService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/students")
+@Tag(name = "Students")
 public class StudentController {
 
-    private final StudentService service;
+    private final StudentService studentService;
 
-    public StudentController(StudentService service) {
-        this.service = service;
+    public StudentController(StudentService studentService) {
+        this.studentService = studentService;
     }
 
     @PostMapping
-    @Operation(summary = "Add a student")
-    public Student addStudent(@RequestBody Student student) {
-        return service.addStudent(student);
+    @Operation(summary = "Add student")
+    public Student add(@RequestBody Student student) {
+        return studentService.addStudent(student);
     }
 
     @GetMapping
-    @Operation(summary = "Get all students")
-    public List<Student> getAllStudents() {
-        return service.getAllStudents();
+    @Operation(summary = "List students")
+    public List<Student> list() {
+        return studentService.getAllStudents();
     }
 }

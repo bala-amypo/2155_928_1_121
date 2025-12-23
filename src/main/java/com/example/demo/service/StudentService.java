@@ -9,26 +9,23 @@ import java.util.List;
 @Service
 public class StudentService {
 
-    private final StudentRepository repo;
+    private final StudentRepository studentRepository;
 
-    public StudentService(StudentRepository repo) {
-        this.repo = repo;
+    public StudentService(StudentRepository studentRepository) {
+        this.studentRepository = studentRepository;
     }
 
-    public Student addStudent(Student s) {
-        if (s.getRollNumber() == null)
-            throw new ApiException("missing");
-
-        if (repo.findByRollNumber(s.getRollNumber()).isPresent())
-            throw new ApiException("exists");
-
-        if (s.getYear() < 1 || s.getYear() > 5)
+    public Student addStudent(Student student) {
+        if (student.getYear() < 1 || student.getYear() > 5) {
             throw new ApiException("year");
-
-        return repo.save(s);
+        }
+        if (studentRepository.findByRollNumber(student.getRollNumber()).isPresent()) {
+            throw new ApiException("exists");
+        }
+        return studentRepository.save(student);
     }
 
     public List<Student> getAllStudents() {
-        return repo.findAll();
+        return studentRepository.findAll();
     }
 }
