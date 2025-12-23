@@ -16,4 +16,64 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
-@Tag(n
+@Tag(name = "Auth")
+public class AuthController {
+
+    private final UserService userService;
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final UserRepository userRepository;
+
+    public AuthController(UserService userService,
+                          AuthenticationManager authenticationManager,
+                          JwtTokenProvider jwtTokenProvider,
+                          UserRepository userRepository) {
+        this.userService = userService;
+        this.authenticationManager = authenticationManager;
+        this.jwtTokenProvider = jwtTokenProvider;
+        this.userRepository = userRepository;
+    }
+
+    @PostMapping("/register")
+    @Operation(summary = "Register new user")
+    public User register(@RequestBody RegisterRequest request) {
+
+        User user = new User();
+        user.setName(request.getName());
+        user.setEmail(request.getEmail());
+        user.setPassword(request.getPassword());
+        user.setRole(request.getRole());
+
+        return userService.register(user);
+    }
+
+    @PostMapping("/login")
+    @Operation(summary = "Login user")
+    public AuthResponse login(@RequestBody AuthRequest request) {
+
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getEmail(),
+                        request.getPassword()
+                )
+        );
+
+        User user = userRepository
+                .findByEmail(request.getEmail())
+                .orElseThrow();
+
+        String token = jwtTokenProvider.generateToken(
+                user.getId(),
+                user.getEmail(),
+                user.getRole()
+        );
+
+        AuthResponse response = new AuthResponse();
+        response.setToken(token);
+        response.setUserId(user.getId());
+        response.setEmail(user.getEmail());
+        response.setRole(user.getRole());
+
+        return response;
+    }
+}
