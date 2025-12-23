@@ -17,27 +17,28 @@ public class SeatingPlan {
     @ManyToOne
     private ExamRoom room;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(length = 5000)
     private String arrangementJson;
 
     private LocalDateTime generatedAt;
 
     @PrePersist
-    void onCreate() {
-        if (generatedAt == null) {
-            generatedAt = LocalDateTime.now();
-        }
+    public void setTime() {
+        generatedAt = LocalDateTime.now();
     }
 
     public Long getId() { return id; }
-    public ExamSession getExamSession() { return examSession; }
-    public ExamRoom getRoom() { return room; }
-    public String getArrangementJson() { return arrangementJson; }
-    public LocalDateTime getGeneratedAt() { return generatedAt; }
-
     public void setId(Long id) { this.id = id; }
+
+    public ExamSession getExamSession() { return examSession; }
     public void setExamSession(ExamSession examSession) { this.examSession = examSession; }
+
+    public ExamRoom getRoom() { return room; }
     public void setRoom(ExamRoom room) { this.room = room; }
+
+    public String getArrangementJson() { return arrangementJson; }
     public void setArrangementJson(String arrangementJson) { this.arrangementJson = arrangementJson; }
+
+    public LocalDateTime getGeneratedAt() { return generatedAt; }
     public void setGeneratedAt(LocalDateTime generatedAt) { this.generatedAt = generatedAt; }
 }

@@ -19,7 +19,6 @@ public class User {
 
     private String role = "STAFF";
 
-    // getters & setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
