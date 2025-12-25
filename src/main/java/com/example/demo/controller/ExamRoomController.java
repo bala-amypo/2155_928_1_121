@@ -1,10 +1,19 @@
+package com.example.demo.controller;
+
+import com.example.demo.model.ExamRoom;
+import com.example.demo.service.RoomService;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
 @RestController
 @RequestMapping("/rooms")
-public class RoomController {
+public class ExamRoomController {
 
     private final RoomService roomService;
 
-    public RoomController(RoomService roomService) {
+    public ExamRoomController(RoomService roomService) {
         this.roomService = roomService;
     }
 
