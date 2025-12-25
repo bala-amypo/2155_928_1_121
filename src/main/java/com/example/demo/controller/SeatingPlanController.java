@@ -2,38 +2,22 @@ package com.example.demo.controller;
 
 import com.example.demo.model.SeatingPlan;
 import com.example.demo.service.SeatingPlanService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/plans")
-@Tag(name = "Plans")
 public class SeatingPlanController {
 
-    private final SeatingPlanService seatingPlanService;
+    private final SeatingPlanService service;
 
-    public SeatingPlanController(SeatingPlanService seatingPlanService) {
-        this.seatingPlanService = seatingPlanService;
+    public SeatingPlanController(SeatingPlanService service) {
+        this.service = service;
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/generate/{sessionId}")
-    @Operation(summary = "Generate seating plan")
     public SeatingPlan generate(@PathVariable Long sessionId) {
-        return seatingPlanService.generatePlan(sessionId);
-    }
-
-    @GetMapping("/{planId}")
-    @Operation(summary = "Get seating plan")
-    public SeatingPlan get(@PathVariable Long planId) {
-        return seatingPlanService.getPlan(planId);
-    }
-
-    @GetMapping("/session/{sessionId}")
-    @Operation(summary = "List plans by session")
-    public List<SeatingPlan> listBySession(@PathVariable Long sessionId) {
-        return seatingPlanService.getPlansBySession(sessionId);
+        return service.generatePlan(sessionId);
     }
 }
