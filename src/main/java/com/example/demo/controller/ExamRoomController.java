@@ -1,33 +1,21 @@
-package com.example.demo.controller;
-
-import com.example.demo.model.ExamRoom;
-import com.example.demo.service.ExamRoomService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-
 @RestController
 @RequestMapping("/rooms")
-@Tag(name = "Rooms")
-public class ExamRoomController {
+public class RoomController {
 
-    private final ExamRoomService examRoomService;
+    private final RoomService roomService;
 
-    public ExamRoomController(ExamRoomService examRoomService) {
-        this.examRoomService = examRoomService;
+    public RoomController(RoomService roomService) {
+        this.roomService = roomService;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    @Operation(summary = "Add exam room")
     public ExamRoom addRoom(@RequestBody ExamRoom room) {
-        return examRoomService.addRoom(room);
+        return roomService.save(room);
     }
 
     @GetMapping
-    @Operation(summary = "List rooms")
-    public List<ExamRoom> listRooms() {
-        return examRoomService.getAllRooms();
+    public List<ExamRoom> getRooms() {
+        return roomService.findAll();
     }
 }
