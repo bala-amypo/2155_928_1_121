@@ -17,12 +17,13 @@ public class ExamRoomController {
         this.service = service;
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
     public ExamRoom addRoom(@RequestBody ExamRoom room) {
         return service.save(room);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping
     public List<ExamRoom> getRooms() {
         return service.findAll();
