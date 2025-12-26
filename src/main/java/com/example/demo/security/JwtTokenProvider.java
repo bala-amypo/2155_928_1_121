@@ -51,8 +51,10 @@ public class JwtTokenProvider {
     private final SecretKey key;
     private final long jwtExpiration;
 
-    public JwtTokenProvider(@Value("${app.jwt.secret}") String secret, 
-                            @Value("${app.jwt.expiration-milliseconds}") long expiration) {
+    // FIX: Added default values after the colon (:) so app starts even if properties are missing
+    public JwtTokenProvider(
+            @Value("${app.jwt.secret:this_is_a_default_secret_key_for_fallback_purposes_must_be_long_enough}") String secret, 
+            @Value("${app.jwt.expiration-milliseconds:3600000}") long expiration) {
         this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
         this.jwtExpiration = expiration;
     }
