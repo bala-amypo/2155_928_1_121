@@ -85,6 +85,8 @@ import com.example.demo.dto.RegisterRequest;
 import com.example.demo.model.User;
 import com.example.demo.security.JwtTokenProvider;
 import com.example.demo.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -96,6 +98,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
+@Tag(name = "Auth", description = "Authentication Management")
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
@@ -103,17 +106,19 @@ public class AuthController {
     private final JwtTokenProvider tokenProvider;
 
     @PostMapping("/register")
+    @Operation(summary = "Register a new user")
     public ResponseEntity<User> register(@RequestBody RegisterRequest registerRequest) {
         User user = User.builder()
                 .name(registerRequest.getName())
                 .email(registerRequest.getEmail())
-                .password(registerRequest.getPassword()) // Service handles encoding
+                .password(registerRequest.getPassword())
                 .role(registerRequest.getRole())
                 .build();
         return ResponseEntity.ok(userService.register(user));
     }
 
     @PostMapping("/login")
+    @Operation(summary = "Login and receive JWT token")
     public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest authRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword())
@@ -121,7 +126,6 @@ public class AuthController {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         
-        // Fetch user to get ID and Role for token generation
         User user = userService.findByEmail(authRequest.getEmail());
         String token = tokenProvider.generateToken(user.getId(), user.getEmail(), user.getRole());
 
