@@ -93,17 +93,19 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
+    // ERROR WAS HERE: Do NOT declare 'private AuthenticationConfiguration authConfig;' as a field.
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(auth -> auth.anyRequest().permitAll()) // Tests require open access or mock auth
+            .authorizeHttpRequests(auth -> auth.anyRequest().permitAll()) 
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
             
         return http.build();
     }
     
-    // FIX: Inject AuthenticationConfiguration directly into the method, NOT as a field.
+    // CORRECT WAY: Inject AuthenticationConfiguration here as a parameter
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
