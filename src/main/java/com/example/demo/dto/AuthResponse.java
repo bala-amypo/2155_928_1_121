@@ -54,6 +54,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AuthResponse {
-    private String accessToken;
-    private String tokenType; // usually "Bearer"
+    // Rename 'accessToken' to 'token' so Lombok generates 'getToken()'
+    private String token; 
+    private String tokenType;
 }

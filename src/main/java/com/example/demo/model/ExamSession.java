@@ -51,6 +51,7 @@ public class ExamSession {
     private LocalDate examDate;
     private String examTime;
 
+    @Builder.Default // Add this to prevent the Builder from ignoring the HashSet initialization
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "session_students",
             joinColumns = @JoinColumn(name = "session_id"),
