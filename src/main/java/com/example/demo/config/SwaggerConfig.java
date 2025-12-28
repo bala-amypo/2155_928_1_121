@@ -23,7 +23,7 @@ public class SwaggerConfig {
                 new Server().url("https://9169.408procr.amypo.ai/")
             ))
 
-            // 🔐 Enable JWT Bearer Authentication
+            //  Enable JWT Bearer Authentication
             .addSecurityItem(
                 new SecurityRequirement().addList("BearerAuth")
             )
