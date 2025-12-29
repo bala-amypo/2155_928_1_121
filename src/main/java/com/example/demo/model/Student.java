@@ -12,10 +12,10 @@ public class Student {
     private Long id;
 
     @Column(unique = true)
-    @NotBlank(message = "Roll number is required") // Validation added
+    @NotBlank(message = "Roll number is required") 
     private String rollNumber;
 
-    @NotBlank(message = "Name is required") // Validation added
+    @NotBlank(message = "Name is required") 
     private String name;
 
     private String department;

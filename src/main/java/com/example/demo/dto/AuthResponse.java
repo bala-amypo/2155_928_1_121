@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AuthResponse {
-    // Rename 'accessToken' to 'token' so Lombok generates 'getToken()'
+    
     private String token; 
     private String tokenType;
 }

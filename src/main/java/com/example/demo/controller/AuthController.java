@@ -27,8 +27,7 @@ public class AuthController {
     private final JwtTokenProvider tokenProvider;
     private final UserRepository userRepository; 
 
-    // Manual constructor to match the Test Suite's instantiation order:
-    // (UserService, AuthenticationManager, JwtTokenProvider, UserRepository)
+    
     public AuthController(UserService userService, 
                           AuthenticationManager authenticationManager, 
                           JwtTokenProvider tokenProvider, 
@@ -63,7 +62,7 @@ public class AuthController {
         User user = userService.findByEmail(authRequest.getEmail());
         String token = tokenProvider.generateToken(user.getId(), user.getEmail(), user.getRole());
 
-        // Returns new AuthResponse with 'token'
+        
         return ResponseEntity.ok(new AuthResponse(token, "Bearer"));
     }
 }

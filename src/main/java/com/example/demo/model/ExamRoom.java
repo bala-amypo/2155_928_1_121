@@ -13,11 +13,11 @@ public class ExamRoom {
     @Column(unique = true)
     private String roomNumber;
 
-    // FIX: 'rows' is a reserved keyword in MySQL, so we map it to 'room_rows'
+    
     @Column(name = "room_rows") 
     private Integer rows;
 
-    // Best practice to rename 'columns' as well to avoid conflicts
+    
     @Column(name = "room_columns")
     private Integer columns;
 

@@ -16,7 +16,7 @@ public class JwtTokenProvider {
     private final SecretKey key;
     private final long jwtExpiration;
 
-    // FIX: Added default values after the colon (:) so app starts even if properties are missing
+    
     public JwtTokenProvider(
             @Value("${app.jwt.secret:this_is_a_default_secret_key_for_fallback_purposes_must_be_long_enough}") String secret, 
             @Value("${app.jwt.expiration-milliseconds:3600000}") long expiration) {

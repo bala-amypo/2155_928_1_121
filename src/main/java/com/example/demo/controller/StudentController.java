@@ -5,7 +5,7 @@ import com.example.demo.model.Student;
 import com.example.demo.service.StudentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid; // Import this
+import jakarta.validation.Valid; 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +20,7 @@ public class StudentController {
 
     @PostMapping
     @Operation(summary = "Add a new student")
-    // FIX: Add @Valid here
+    
     public ResponseEntity<Student> add(@RequestBody @Valid Student s) {
         return ResponseEntity.ok(service.addStudent(s));
     }
