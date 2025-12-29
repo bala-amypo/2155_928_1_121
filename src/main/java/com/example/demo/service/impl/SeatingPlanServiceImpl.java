@@ -30,7 +30,7 @@ public class SeatingPlanServiceImpl implements SeatingPlanService {
                 .findFirst()
                 .orElseThrow(() -> new ApiException("No room found with sufficient capacity"));
 
-        // Generate JSON Arrangement (Simple Mock Logic)
+        
         Map<String, String> arrangement = new HashMap<>();
         List<Student> students = new ArrayList<>(session.getStudents());
         for (int i = 0; i < students.size(); i++) {

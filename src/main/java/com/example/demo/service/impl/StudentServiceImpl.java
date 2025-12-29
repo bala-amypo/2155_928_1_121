@@ -15,7 +15,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student addStudent(Student student) {
-        // FIX: Explicit logic check for service-layer tests
+        
         if (student.getRollNumber() == null || student.getRollNumber().trim().isEmpty() ||
             student.getName() == null || student.getName().trim().isEmpty()) {
             throw new ApiException("Roll number and Name are required");
