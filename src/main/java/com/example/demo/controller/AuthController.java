@@ -25,7 +25,7 @@ public class AuthController {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider tokenProvider;
-    private final UserRepository userRepository; // Added to satisfy test constructor
+    private final UserRepository userRepository; 
 
     // Manual constructor to match the Test Suite's instantiation order:
     // (UserService, AuthenticationManager, JwtTokenProvider, UserRepository)
